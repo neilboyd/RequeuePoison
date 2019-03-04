@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequeuePoison", "RequeuePoison\RequeuePoison.csproj", "{282818A4-C487-4F7B-9E1A-BCB715B7A040}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{76C7F0EF-6F13-4C7A-9A46-FCF2D6B5CE43}"
+	ProjectSection(SolutionItems) = preProject
+		appsettings.json = appsettings.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{282818A4-C487-4F7B-9E1A-BCB715B7A040}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{282818A4-C487-4F7B-9E1A-BCB715B7A040}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{282818A4-C487-4F7B-9E1A-BCB715B7A040}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{282818A4-C487-4F7B-9E1A-BCB715B7A040}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7A74F3B2-3AC2-4A29-9167-EE579E6EDCBF}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,2 @@
+# We don't want git to mess with line endings, no matter what local config someone might have.
+* -text
