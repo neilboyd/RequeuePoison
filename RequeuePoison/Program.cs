@@ -34,9 +34,16 @@ namespace RequeuePoison
             var queue = queueClient.GetQueueReference(queueName);
             var poisonQueue = queueClient.GetQueueReference(poisonQueueName);
 
+            // get max age property
+            var maxAgeString = configuration["MaxAge"];
+            if (string.IsNullOrEmpty(maxAgeString) || !int.TryParse(maxAgeString, out var maxAge))
+            {
+                maxAge = 1;
+            }
+
             var requeued = 0;
             var deleted = 0;
-            var lastDay = DateTime.UtcNow.AddDays(-100);
+            var lastDay = DateTime.UtcNow.AddDays(-maxAge);
             while (true)
             {
                 var message = await poisonQueue.GetMessageAsync();
