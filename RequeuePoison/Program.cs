@@ -15,7 +15,7 @@ namespace RequeuePoison
     {
         public static async Task Main(string[] args)
         {
-            var queueName = args.Length > 0 ? args[0] : "bol-999-check";
+            var queueName = args.Length > 0 ? args[0] : throw new ArgumentException("Specify queue name as parameter");
             var poisonQueueName = $"{queueName}-poison";
 
             // read the configuration
