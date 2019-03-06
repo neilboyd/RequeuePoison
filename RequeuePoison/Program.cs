@@ -19,7 +19,7 @@ namespace RequeuePoison
             var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.json", true)
                 .AddJsonFile($"appsettings.{environmentName}.json", true)
                 .AddCommandLine(args)
                 .AddUserSecrets<Program>();
