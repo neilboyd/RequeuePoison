@@ -28,7 +28,7 @@ namespace RequeuePoison
             var configuration = builder.Build();
 
             // get storage references
-            var connectionString = configuration.GetConnectionString("AzureWebJobsStorage");
+            var connectionString = configuration["ConnectionString"] ?? throw new ArgumentException("Specify connection string");
             var storageAccount = CloudStorageAccount.Parse(connectionString);
             var queueClient = storageAccount.CreateCloudQueueClient();
             var queue = queueClient.GetQueueReference(queueName);
