@@ -15,17 +15,19 @@ namespace RequeuePoison
     {
         public static async Task Main(string[] args)
         {
-            var queueName = args.Length > 0 ? args[0] : throw new ArgumentException("Specify queue name as parameter");
-            var poisonQueueName = $"{queueName}-poison";
-
             // read the configuration
             var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{environmentName}.json", true)
+                .AddCommandLine(args)
                 .AddUserSecrets<Program>();
             var configuration = builder.Build();
+
+            // get queue name
+            var queueName = configuration["Queue"] ?? throw new ArgumentException("Specify queue name");
+            var poisonQueueName = $"{queueName}-poison";
 
             // get storage references
             var connectionString = configuration["ConnectionString"] ?? throw new ArgumentException("Specify connection string");
