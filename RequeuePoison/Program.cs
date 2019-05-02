@@ -38,14 +38,23 @@ namespace RequeuePoison
 
             // get max age property
             var maxAgeString = configuration["MaxAge"];
-            if (string.IsNullOrEmpty(maxAgeString) || !int.TryParse(maxAgeString, out var maxAge))
+            if (!int.TryParse(maxAgeString, out var maxAge))
             {
                 maxAge = 1;
             }
 
+            // get interval property
+            var intervalString = configuration["Interval"];
+            if (!int.TryParse(intervalString, out var intervalInt))
+            {
+                intervalInt = 0;
+            }
+            var interval = TimeSpan.FromMilliseconds(intervalInt);
+
             var requeued = 0;
             var deleted = 0;
             var lastDay = DateTime.UtcNow.AddDays(-maxAge);
+            var delay = TimeSpan.Zero;
             while (true)
             {
                 var message = await poisonQueue.GetMessageAsync();
@@ -56,8 +65,9 @@ namespace RequeuePoison
                 var isLastDay = message.InsertionTime > lastDay;
                 if (isLastDay)
                 {
-                    await queue.AddMessageAsync(new CloudQueueMessage(message.AsString));
+                    await queue.AddMessageAsync(new CloudQueueMessage(message.AsString), null, delay, null, null);
                     ++requeued;
+                    delay += interval;
                 }
                 else
                 {
