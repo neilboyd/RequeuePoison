@@ -77,6 +77,8 @@ namespace RequeuePoison
             }
 
             Console.WriteLine($"Requeued {requeued} messages to {queueName}, deleted {deleted}");
+            Console.WriteLine("Enter ENTER to continue");
+            Console.ReadLine();
         }
     }
 }
