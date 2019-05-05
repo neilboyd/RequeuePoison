@@ -53,7 +53,7 @@ namespace RequeuePoison
 
             var requeued = 0;
             var deleted = 0;
-            var lastDay = DateTime.UtcNow.AddDays(-maxAge);
+            var ageLimit = DateTime.UtcNow.AddDays(-maxAge);
             var delay = TimeSpan.Zero;
             while (true)
             {
@@ -62,16 +62,16 @@ namespace RequeuePoison
                 {
                     break;
                 }
-                var isLastDay = message.InsertionTime > lastDay;
-                if (isLastDay)
+                var isOld = message.InsertionTime < ageLimit;
+                if (isOld)
+                {
+                    ++deleted;
+                }
+                else
                 {
                     await queue.AddMessageAsync(new CloudQueueMessage(message.AsString), null, delay, null, null);
                     ++requeued;
                     delay += interval;
-                }
-                else
-                {
-                    ++deleted;
                 }
                 await poisonQueue.DeleteMessageAsync(message);
             }
