@@ -36,6 +36,13 @@ namespace RequeuePoison
             var queue = queueClient.GetQueueReference(queueName);
             var poisonQueue = queueClient.GetQueueReference(poisonQueueName);
 
+            // get max property
+            var maxString = configuration["Max"];
+            if (!int.TryParse(maxString, out var max))
+            {
+                max = int.MaxValue;
+            }
+
             // get max age property
             var maxAgeString = configuration["MaxAge"];
             if (!int.TryParse(maxAgeString, out var maxAge))
@@ -74,6 +81,10 @@ namespace RequeuePoison
                     delay += interval;
                 }
                 await poisonQueue.DeleteMessageAsync(message);
+                if (requeued == max)
+                {
+                    break;
+                }
             }
 
             Console.WriteLine($"Requeued {requeued} messages to {queueName}, deleted {deleted}");
