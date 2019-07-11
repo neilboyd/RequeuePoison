@@ -88,6 +88,18 @@ namespace RequeuePoison
             }
 
             Console.WriteLine($"Requeued {requeued} messages to {queueName}, deleted {deleted}");
+            if(delay < TimeSpan.FromMinutes(3))
+            {
+                Console.WriteLine($"Total delay: {delay.TotalSeconds} seconds");
+            }
+            else if(delay < TimeSpan.FromHours(3))
+            {
+                Console.WriteLine($"Total delay: {(delay.TotalSeconds / 60):F1} minutes");
+            }
+            else
+            {
+                Console.WriteLine($"Total delay: {(delay.TotalSeconds / 3600):F1} hours");
+            }
             Console.WriteLine("Enter ENTER to continue");
             Console.ReadLine();
         }
