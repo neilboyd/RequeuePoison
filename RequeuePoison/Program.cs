@@ -21,8 +21,8 @@ namespace RequeuePoison
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true)
                 .AddJsonFile($"appsettings.{environmentName}.json", true)
-                .AddCommandLine(args)
-                .AddUserSecrets<Program>();
+                .AddUserSecrets<Program>()
+                .AddCommandLine(args);
             var configuration = builder.Build();
 
             // get queue name
