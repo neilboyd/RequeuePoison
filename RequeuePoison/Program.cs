@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
+using System.Diagnostics;
 
 // read the configuration
 var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -75,17 +76,20 @@ while (true)
 }
 
 Console.WriteLine($"Requeued {requeued} messages to {queueName}, deleted {deleted}");
-if(delay < TimeSpan.FromMinutes(3))
+if (delay < TimeSpan.FromMinutes(3))
 {
     Console.WriteLine($"Total delay: {delay.TotalSeconds} seconds");
 }
-else if(delay < TimeSpan.FromHours(3))
+else if (delay < TimeSpan.FromHours(3))
 {
-    Console.WriteLine($"Total delay: {(delay.TotalSeconds / 60):F1} minutes");
+    Console.WriteLine($"Total delay: {delay.TotalSeconds / 60:F1} minutes");
 }
 else
 {
-    Console.WriteLine($"Total delay: {(delay.TotalSeconds / 3600):F1} hours");
+    Console.WriteLine($"Total delay: {delay.TotalSeconds / 3600:F1} hours");
 }
-Console.WriteLine("Enter ENTER to continue");
-Console.ReadLine();
+if (!Debugger.IsAttached)
+{
+    Console.WriteLine("Enter ENTER to continue");
+    Console.ReadLine();
+}
