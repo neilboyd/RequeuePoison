@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Queue;
+﻿using Azure.Storage.Queues;
+using Azure.Storage.Queues.Models;
+using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
 
 // read the configuration
@@ -19,10 +19,8 @@ var poisonQueueName = $"{queueName}-poison";
 
 // get storage references
 var connectionString = configuration["ConnectionString"] ?? throw new ArgumentException("Specify connection string");
-var storageAccount = CloudStorageAccount.Parse(connectionString);
-var queueClient = storageAccount.CreateCloudQueueClient();
-var queue = queueClient.GetQueueReference(queueName);
-var poisonQueue = queueClient.GetQueueReference(poisonQueueName);
+var queue = new QueueClient(connectionString, queueName);
+var poisonQueue = new QueueClient(connectionString, poisonQueueName);
 
 // get max property
 var maxString = configuration["Max"];
@@ -52,23 +50,24 @@ var ageLimit = DateTime.UtcNow.AddDays(-maxAge);
 var delay = TimeSpan.Zero;
 while (true)
 {
-    var message = await poisonQueue.GetMessageAsync();
+    QueueMessage message = await poisonQueue.ReceiveMessageAsync();
     if (message == null)
     {
         break;
     }
-    var isOld = message.InsertionTime < ageLimit;
+    var isOld = message.InsertedOn < ageLimit;
     if (isOld)
     {
         ++deleted;
     }
     else
     {
-        await queue.AddMessageAsync(new CloudQueueMessage(message.AsString), null, delay, null, null);
+        var body = message.Body.ToString();
+        await queue.SendMessageAsync(body, visibilityTimeout: delay);
         ++requeued;
         delay += interval;
     }
-    await poisonQueue.DeleteMessageAsync(message);
+    await poisonQueue.DeleteMessageAsync(message.MessageId, message.PopReceipt);
     if (requeued == max)
     {
         break;
